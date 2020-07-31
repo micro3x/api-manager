@@ -1,0 +1,29 @@
+{
+  "name": "api-manager",
+  "version": "1.0.0",
+  "description": "Core Service for managing different APIs as plugins.",
+  "main": "index.js",
+  "scripts": {
+    "start:dev": "nodemon",
+    "build": "rimraf ./build && tsc",
+    "start": "npm run build && node build/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/micro3x/api-manager.git"
+  },
+  "author": "micro3x",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/micro3x/api-manager/issues"
+  },
+  "homepage": "https://github.com/micro3x/api-manager#readme",
+  "devDependencies": {
+    "@types/node": "^14.0.27",
+    "nodemon": "^2.0.4",
+    "rimraf": "^3.0.2",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.7"
+  }
+}
