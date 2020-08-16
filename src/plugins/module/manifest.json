@@ -1,0 +1,16 @@
+{
+  "name": "module",
+  "controller": {
+    "filename": "controllers/main",
+    "routes": [
+      {
+        "method": "get",
+        "name": "list"
+      },
+      {
+        "method": "post",
+        "name":"list"
+      }
+    ]
+  }
+}

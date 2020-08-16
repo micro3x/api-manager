@@ -1,0 +1,12 @@
+{
+  "name": "blah",
+  "controller": {
+    "filename": "main",
+    "routes": [
+      {
+        "method": "get",
+        "name": "test"
+      }
+    ]
+  }
+}
