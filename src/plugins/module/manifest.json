@@ -9,7 +9,23 @@
       },
       {
         "method": "post",
-        "name":"list"
+        "name": "list"
+      }
+    ]
+  },
+  "constructor": {
+    "entryFile": "index",
+    "entryFunction": "init",
+    "dependencies": [
+      {
+        "name": "awsS3",
+        "config": {
+          "accessKeyId": "",
+          "secretAccessKey": "",
+          "endpoint": "",
+          "s3ForcePathStyle": true,
+          "signatureVersion": "v4"
+        }
       }
     ]
   }

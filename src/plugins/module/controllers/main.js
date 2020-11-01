@@ -1,5 +1,10 @@
+import main from '../index';
+
 function list(req, res) {
-  res.send({ "runtimeAddedPlugin": "WOW!!!" });
+  main.s3.listObjects({Bucket: 'test'}, (error, data) => {
+    res.send(data);
+  })
+
 }
 
 module.exports = {

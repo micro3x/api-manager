@@ -1,8 +1,9 @@
 import path from 'path';
 import IPluginManifest, { IRoute } from './interfaces/IPluginManifest';
 import IModule, { EModuleStatus } from './interfaces/IModule';
-import { PLUGINS_PATH } from './constants';
+import { PLUGINS_PATH, MANIFEST_FILENAME } from './constants';
 const { readFileSync, existsSync } = require('fs');
+import Services from '../services';
 
 class PluginsService {
   expressApp: any;
@@ -20,9 +21,9 @@ class PluginsService {
       this.removeModuleByName(name);
     }
 
-    let manifestPath = path.resolve(PLUGINS_PATH, name, 'manifest.json');
+    let manifestPath = path.resolve(PLUGINS_PATH, name, MANIFEST_FILENAME);
     if (existsSync(manifestPath)) {
-      let manifest = JSON.parse(readFileSync(manifestPath));
+      let manifest = <IPluginManifest>JSON.parse(readFileSync(manifestPath));
       this.loadModuleFromManifest(manifest, path.resolve(PLUGINS_PATH, name));
     } else {
       throw new Error('manifest does not exist.')
@@ -33,6 +34,25 @@ class PluginsService {
     try {
       let rootPath = `/${manifest.name}`;
       let controller = require(path.resolve(folder, manifest.controller.filename));
+      if (manifest.constructor?.entryFile) {
+        import(path.resolve(folder, manifest.constructor.entryFile))
+          .then(
+            entry => {
+              var dependencies: { [key: string]: any } = {};
+              if (manifest.constructor?.dependencies && manifest.constructor.dependencies.length) {
+                manifest.constructor.dependencies.forEach(dep => {
+                  dependencies[dep.name] = Services.loadService(dep.name, dep.config);
+                })
+              }
+              if (manifest.constructor?.entryFunction) {
+                entry.default[manifest.constructor.entryFunction](dependencies || {});
+              } else {
+                entry.default(dependencies);
+              }
+            }
+          )
+      }
+
       manifest.controller.routes.forEach((route: IRoute) => {
         this.expressRouter[route.method](`${rootPath}/${route.name}`, controller[route.name])
       });
@@ -41,6 +61,7 @@ class PluginsService {
         status: EModuleStatus.Active
       })
     } catch (err) {
+      console.log(err);
       this.modules.push({
         manifest,
         status: EModuleStatus.Error,
